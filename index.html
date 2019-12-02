@@ -803,6 +803,247 @@
 
 
   
+    <article id="post-第二次讲义" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/02/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E8%AE%B2%E4%B9%89/">第三次讲义</a>
+    </h1>
+  
+
+        
+        <a href="/2019/12/02/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E8%AE%B2%E4%B9%89/" class="archive-article-date">
+  	<time datetime="2019-12-02T11:57:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="动态网站开发第三次课讲义"><a href="#动态网站开发第三次课讲义" class="headerlink" title="\动态网站开发第三次课讲义**"></a><strong><em>\</em>动态网站开发第三次课讲义**</strong></h1><h2 id="一、学习目标"><a href="#一、学习目标" class="headerlink" title="\一、学习目标**"></a><strong><em>\</em>一、学习目标**</strong></h2><p>1、掌握http协议之响应部分</p>
+<p>2、熟练掌握Response的相关 API （重定向，路径，输出流）</p>
+<p>3、掌握ServletContext的常用API</p>
+<p>4、完成文件下载案例</p>
+<h2 id="二、具体讲解"><a href="#二、具体讲解" class="headerlink" title="\二、具体讲解**"></a><strong><em>\</em>二、具体讲解**</strong></h2><p>  <strong><em>\</em>2.1、掌握http协议之响应部分**</strong></p>
+<p>  \1. 请求消息：客户端发送给服务器端的数据</p>
+<p>​      数据格式：</p>
+<p>​            1. 请求行</p>
+<p>​            2. 请求头</p>
+<p>​            3. 请求空行</p>
+<p>​            4. 请求体</p>
+<p>​    2. 响应消息：服务器端发送给客户端的数据</p>
+<p>​        数据格式：</p>
+<p>​            <strong><em>\</em>1. 响应行**</strong></p>
+<p>​                1. 组成：协议/版本 响应状态码 状态码描述</p>
+<p>​                2. 响应状态码：服务器告诉客户端浏览器本次请求和响应的一个状态。</p>
+<p>​                    1. 状态码都是3位数字 </p>
+<p>​                    2. 分类：</p>
+<p>\1. 1xx：服务器就收客户端消息，但没有接受完成，等待一段时    间后，发送1xx多状态码</p>
+<p>​                        2. 2xx：成功。代表：200</p>
+<p>​                        3. 3xx：重定向。代表：302(重定向)，304(访问缓存)</p>
+<p>​                        4. 4xx：客户端错误。</p>
+<p>​                            代表：</p>
+<p>​                                404（请求路径没有对应的资源） </p>
+<p>​                                405：请求方式没有对应的doXxx方法</p>
+<p>​                        5. 5xx：服务器端错误。代表：500(服务器内部出现异常)        </p>
+<p>​            <strong><em>\</em>2. 响应头：**</strong></p>
+<p>​                1. 格式：头名称： 值</p>
+<p>​                2. 常见的响应头：</p>
+<p>​                 1. Content-Type：服务器告诉客户端本次响应体数据格式以及编码格式</p>
+<p>​                 2. Content-disposition：服务器告诉客户端以什么格式打开响应体数据</p>
+<p>​         MIME类型</p>
+<p>​                    值：</p>
+<p>​                        in-line:默认值,在当前页面内打开</p>
+<p>​                      attachment;filename=xxx：以附件形式打开响应体。文件下载</p>
+<p>​            <strong><em>\</em>3. 响应空行**</strong></p>
+<p>​            <strong><em>\</em>4. 响应体:传输的数据**</strong></p>
+<p>​        响应字符串格式</p>
+<p>​            HTTP/1.1 200 OK</p>
+<p>​            Content-Type: text/html;charset=UTF-8</p>
+<p>​            Content-Length: 101</p>
+<p>​            Date: Wed, 06 Jun 2018 07:08:42 GMT</p>
+<p>​            <html></p>
+<p>​             <head></p>
+<p>​              <title>$Title$</title></p>
+<p>​             </head></p>
+<p>​             <body></p>
+<p>​             hello , response</p>
+<p>​             </body></p>
+<p>​            </html></p>
+<p><strong><em>\</em>2.2、熟练掌握Response的相关 API （重定向，路径，输出流）**</strong></p>
+<p>  <strong><em>\</em>Response对象**</strong></p>
+<p>​      功能：设置响应消息</p>
+<p>​        1. 设置响应行</p>
+<p>​            1. 格式：HTTP/1.1 200 ok</p>
+<p>​            2. 设置状态码：setStatus(int sc) </p>
+<p>​        2. 设置响应头：setHeader(String name, String value)     </p>
+<p>​        3. 设置响应体：</p>
+<p>​            使用步骤：</p>
+<p>​                1. 获取输出流</p>
+<p>​                    字符输出流：PrintWriter getWriter()</p>
+<p>​                    字节输出流：ServletOutputStream getOutputStream()</p>
+<p>​                2. 使用输出流，将数据输出到客户端浏览器</p>
+<p>​    <strong><em>\</em>案例：**</strong></p>
+<p>​        1. 完成重定向</p>
+<p>​            重定向：资源跳转的方式，重定向为向另外一个servlet</p>
+<p>​          或另外一个jsp发送一个新的请求</p>
+<p>​            代码实现：</p>
+<p>​             1. 设置状态码为302</p>
+<p>​            response.setStatus(302);</p>
+<p>​           2.设置响应头location</p>
+<p>​            response.setHeader(“location”,”/day15/responseDemo2”);</p>
+<p>​            //简单的重定向方法</p>
+<p>​            response.sendRedirect(“/day15/responseDemo2”);</p>
+<p>​             重定向的特点:redirect</p>
+<p>​                1. 地址栏发生变化</p>
+<p>​                2. 重定向可以访问其他站点(服务器)的资源</p>
+<p>​                3. 重定向是两次请求。不能使用request对象来共享数据</p>
+<p>​             转发的特点：forward</p>
+<p>​                1. 转发地址栏路径不变</p>
+<p>​                2. 转发只能访问当前服务器下的资源</p>
+<p>​                3. 转发是一次请求，可以使用request对象来共享数据</p>
+<p>​             forward 和  redirect 区别</p>
+<p>​             路径写法：</p>
+<p>​                1. 路径分类</p>
+<p>​                    1. 相对路径：通过相对路径不可以确定唯一资源</p>
+<p>​                        如：./index.html</p>
+<p>​                         不以/开头，以.开头路径</p>
+<p>​                         规则：找到当前资源和目标资源之间的相对位置关系</p>
+<p>​                            ./：当前目录</p>
+<p>​                          ../:后退一级目录</p>
+<p>​                    2. 绝对路径：通过绝对路径可以确定唯一资源</p>
+<p>​    如：<a href="http://localhost/day15/responseDemo2" target="_blank" rel="noopener">http://localhost/day15/responseDemo2</a>           /day15/responseDemo2   以/开头的路径</p>
+<p><strong><em>\</em>规则：判断定义的路径是给谁用的？判断请求将来从哪儿发出**</strong></p>
+<p>​                         给客户端浏览器使用：需要加虚拟目录(项目的访问路径)</p>
+<p>​                                建议虚拟目录动态获取：request.getContextPath()</p>
+<p>​                                <a> , <form> 重定向…</p>
+<p>​                         给服务器使用：不需要加虚拟目录</p>
+<p>​                                转发路径</p>
+<p>​        2. 服务器输出字符数据到浏览器</p>
+<p>​             步骤：</p>
+<p>​                1. 获取字符输出流</p>
+<p>​                2. 输出数据</p>
+<p>​             注意：</p>
+<p>​                乱码问题：</p>
+<p>​               1. PrintWriter pw = response.getWriter();获取的流的默认编码是ISO-8859-1</p>
+<p>​             2. 设置该流的默认编码</p>
+<p>​             //简单的形式，设置编码，是在获取流之前设置</p>
+<p>​           response.setContentType(“text/html;charset=utf-8”);</p>
+<p>​        3. 服务器输出字节数据到浏览器</p>
+<p>​            步骤：</p>
+<p>​                1. 获取字节输出流</p>
+<p>​                2. 输出数据</p>
+<p>​        4. 验证码</p>
+<p>​            1. 本质：图片</p>
+<p>​            2. 目的：防止恶意表单注册</p>
+<p>​      <img src="file:///C:%5CUsers%5Chp%5CAppData%5CLocal%5CTemp%5Cksohtml14372%5Cwps15.jpg" alt="img"></p>
+<p><strong><em>\</em>2.3、掌握ServletContext的常用API**</strong></p>
+<p><strong><em>\</em>Servlet有四大域对象，pageContext request session application**</strong></p>
+<p><strong><em>\</em>request    HttpServletRequest**</strong></p>
+<p><strong><em>\</em>session    HttpSession**</strong></p>
+<p><strong><em>\</em>application   ServletContext**</strong></p>
+<p>\1. 概念：代表整个web应用，可以和程序的容器(服务器)来通信</p>
+<p>​    2. 获取：</p>
+<p>​        1. 通过request对象获取</p>
+<p>​            request.getServletContext();</p>
+<p>​        2. 通过HttpServlet获取</p>
+<p>​            this.getServletContext();</p>
+<p>​    3. 功能：</p>
+<p>​        1. 获取MIME类型：</p>
+<p>​            * MIME类型:在互联网通信过程中定义的一种文件数据类型</p>
+<p>​                * 格式： 大类型/小类型  text/html        image/jpeg</p>
+<p>​            * 获取：String getMimeType(String file)  </p>
+<p>​        2. 域对象：共享数据</p>
+<p>​            1. setAttribute(String name,Object value)</p>
+<p>​            2. getAttribute(String name)</p>
+<p>​            3. removeAttribute(String name)</p>
+<p>​            * ServletContext对象范围：所有用户所有请求的数据</p>
+<p>​        3. 获取文件的真实(服务器)路径</p>
+<p>​            1. 方法：String getRealPath(String path)  </p>
+<p>​             String b = context.getRealPath(“/b.txt”);//web目录下资源访问</p>
+<p>​           System.out.println(b);</p>
+<p>​           String c = context.getRealPath(“/WEB-INF/c.txt”);//WEB-INF目录下的资源访问</p>
+<p>​           System.out.println(c);</p>
+<p>​          String a = context.getRealPath(“/WEB-INF/classes/a.txt”);//src目录下的资源访问</p>
+<p>​           System.out.println(a);</p>
+<p><strong><em>\</em>2.4、完成文件下载案例**</strong></p>
+<p>​     文件下载需求：</p>
+<p>​        1. 页面显示超链接</p>
+<p>​        2. 点击超链接后弹出下载提示框</p>
+<p>​        3. 完成图片文件下载</p>
+<p>​     分析：</p>
+<p>​        1. 超链接指向的资源如果能够被浏览器解析，则在浏览器中展示，如果不能解析，则弹出下载提示框。不满足需求</p>
+<p>​        2. 任何资源都必须弹出下载提示框</p>
+<p>​        3. 使用响应头设置资源的打开方式：</p>
+<p>​         content-disposition:attachment;filename=xxx</p>
+<p>​     步骤：</p>
+<p>​        1. 定义页面，编辑超链接href属性，指向Servlet，传递资源名称filename</p>
+<p>​        2. 定义Servlet</p>
+<p>​            1. 获取文件名称</p>
+<p>​            2. 使用字节输入流加载文件进内存</p>
+<p>​            3. 指定response的响应头： content-disposition:attachment;filename=xxx</p>
+<p>​            4. 将数据写出到response输出流</p>
+<p>​     问题：</p>
+<p>​         中文文件问题</p>
+<p>​             解决思路：</p>
+<p>​                1. 获取客户端使用的浏览器版本信息</p>
+<p>​                2. 根据不同的版本信息，设置filename的编码方式不同</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Mysql</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/12/02/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E8%AE%B2%E4%B9%89/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-第一次讲义" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1117,247 +1358,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/12/02/%E7%AC%AC%E4%B8%89%E6%AC%A1%E8%AE%B2%E4%B9%89/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-第二次讲义" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/02/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E8%AE%B2%E4%B9%89/">第三次讲义</a>
-    </h1>
-  
-
-        
-        <a href="/2019/12/02/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E8%AE%B2%E4%B9%89/" class="archive-article-date">
-  	<time datetime="2019-12-02T11:57:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="动态网站开发第三次课讲义"><a href="#动态网站开发第三次课讲义" class="headerlink" title="\动态网站开发第三次课讲义**"></a><strong><em>\</em>动态网站开发第三次课讲义**</strong></h1><h2 id="一、学习目标"><a href="#一、学习目标" class="headerlink" title="\一、学习目标**"></a><strong><em>\</em>一、学习目标**</strong></h2><p>1、掌握http协议之响应部分</p>
-<p>2、熟练掌握Response的相关 API （重定向，路径，输出流）</p>
-<p>3、掌握ServletContext的常用API</p>
-<p>4、完成文件下载案例</p>
-<h2 id="二、具体讲解"><a href="#二、具体讲解" class="headerlink" title="\二、具体讲解**"></a><strong><em>\</em>二、具体讲解**</strong></h2><p>  <strong><em>\</em>2.1、掌握http协议之响应部分**</strong></p>
-<p>  \1. 请求消息：客户端发送给服务器端的数据</p>
-<p>​      数据格式：</p>
-<p>​            1. 请求行</p>
-<p>​            2. 请求头</p>
-<p>​            3. 请求空行</p>
-<p>​            4. 请求体</p>
-<p>​    2. 响应消息：服务器端发送给客户端的数据</p>
-<p>​        数据格式：</p>
-<p>​            <strong><em>\</em>1. 响应行**</strong></p>
-<p>​                1. 组成：协议/版本 响应状态码 状态码描述</p>
-<p>​                2. 响应状态码：服务器告诉客户端浏览器本次请求和响应的一个状态。</p>
-<p>​                    1. 状态码都是3位数字 </p>
-<p>​                    2. 分类：</p>
-<p>\1. 1xx：服务器就收客户端消息，但没有接受完成，等待一段时    间后，发送1xx多状态码</p>
-<p>​                        2. 2xx：成功。代表：200</p>
-<p>​                        3. 3xx：重定向。代表：302(重定向)，304(访问缓存)</p>
-<p>​                        4. 4xx：客户端错误。</p>
-<p>​                            代表：</p>
-<p>​                                404（请求路径没有对应的资源） </p>
-<p>​                                405：请求方式没有对应的doXxx方法</p>
-<p>​                        5. 5xx：服务器端错误。代表：500(服务器内部出现异常)        </p>
-<p>​            <strong><em>\</em>2. 响应头：**</strong></p>
-<p>​                1. 格式：头名称： 值</p>
-<p>​                2. 常见的响应头：</p>
-<p>​                 1. Content-Type：服务器告诉客户端本次响应体数据格式以及编码格式</p>
-<p>​                 2. Content-disposition：服务器告诉客户端以什么格式打开响应体数据</p>
-<p>​         MIME类型</p>
-<p>​                    值：</p>
-<p>​                        in-line:默认值,在当前页面内打开</p>
-<p>​                      attachment;filename=xxx：以附件形式打开响应体。文件下载</p>
-<p>​            <strong><em>\</em>3. 响应空行**</strong></p>
-<p>​            <strong><em>\</em>4. 响应体:传输的数据**</strong></p>
-<p>​        响应字符串格式</p>
-<p>​            HTTP/1.1 200 OK</p>
-<p>​            Content-Type: text/html;charset=UTF-8</p>
-<p>​            Content-Length: 101</p>
-<p>​            Date: Wed, 06 Jun 2018 07:08:42 GMT</p>
-<p>​            <html></p>
-<p>​             <head></p>
-<p>​              <title>$Title$</title></p>
-<p>​             </head></p>
-<p>​             <body></p>
-<p>​             hello , response</p>
-<p>​             </body></p>
-<p>​            </html></p>
-<p><strong><em>\</em>2.2、熟练掌握Response的相关 API （重定向，路径，输出流）**</strong></p>
-<p>  <strong><em>\</em>Response对象**</strong></p>
-<p>​      功能：设置响应消息</p>
-<p>​        1. 设置响应行</p>
-<p>​            1. 格式：HTTP/1.1 200 ok</p>
-<p>​            2. 设置状态码：setStatus(int sc) </p>
-<p>​        2. 设置响应头：setHeader(String name, String value)     </p>
-<p>​        3. 设置响应体：</p>
-<p>​            使用步骤：</p>
-<p>​                1. 获取输出流</p>
-<p>​                    字符输出流：PrintWriter getWriter()</p>
-<p>​                    字节输出流：ServletOutputStream getOutputStream()</p>
-<p>​                2. 使用输出流，将数据输出到客户端浏览器</p>
-<p>​    <strong><em>\</em>案例：**</strong></p>
-<p>​        1. 完成重定向</p>
-<p>​            重定向：资源跳转的方式，重定向为向另外一个servlet</p>
-<p>​          或另外一个jsp发送一个新的请求</p>
-<p>​            代码实现：</p>
-<p>​             1. 设置状态码为302</p>
-<p>​            response.setStatus(302);</p>
-<p>​           2.设置响应头location</p>
-<p>​            response.setHeader(“location”,”/day15/responseDemo2”);</p>
-<p>​            //简单的重定向方法</p>
-<p>​            response.sendRedirect(“/day15/responseDemo2”);</p>
-<p>​             重定向的特点:redirect</p>
-<p>​                1. 地址栏发生变化</p>
-<p>​                2. 重定向可以访问其他站点(服务器)的资源</p>
-<p>​                3. 重定向是两次请求。不能使用request对象来共享数据</p>
-<p>​             转发的特点：forward</p>
-<p>​                1. 转发地址栏路径不变</p>
-<p>​                2. 转发只能访问当前服务器下的资源</p>
-<p>​                3. 转发是一次请求，可以使用request对象来共享数据</p>
-<p>​             forward 和  redirect 区别</p>
-<p>​             路径写法：</p>
-<p>​                1. 路径分类</p>
-<p>​                    1. 相对路径：通过相对路径不可以确定唯一资源</p>
-<p>​                        如：./index.html</p>
-<p>​                         不以/开头，以.开头路径</p>
-<p>​                         规则：找到当前资源和目标资源之间的相对位置关系</p>
-<p>​                            ./：当前目录</p>
-<p>​                          ../:后退一级目录</p>
-<p>​                    2. 绝对路径：通过绝对路径可以确定唯一资源</p>
-<p>​    如：<a href="http://localhost/day15/responseDemo2" target="_blank" rel="noopener">http://localhost/day15/responseDemo2</a>           /day15/responseDemo2   以/开头的路径</p>
-<p><strong><em>\</em>规则：判断定义的路径是给谁用的？判断请求将来从哪儿发出**</strong></p>
-<p>​                         给客户端浏览器使用：需要加虚拟目录(项目的访问路径)</p>
-<p>​                                建议虚拟目录动态获取：request.getContextPath()</p>
-<p>​                                <a> , <form> 重定向…</p>
-<p>​                         给服务器使用：不需要加虚拟目录</p>
-<p>​                                转发路径</p>
-<p>​        2. 服务器输出字符数据到浏览器</p>
-<p>​             步骤：</p>
-<p>​                1. 获取字符输出流</p>
-<p>​                2. 输出数据</p>
-<p>​             注意：</p>
-<p>​                乱码问题：</p>
-<p>​               1. PrintWriter pw = response.getWriter();获取的流的默认编码是ISO-8859-1</p>
-<p>​             2. 设置该流的默认编码</p>
-<p>​             //简单的形式，设置编码，是在获取流之前设置</p>
-<p>​           response.setContentType(“text/html;charset=utf-8”);</p>
-<p>​        3. 服务器输出字节数据到浏览器</p>
-<p>​            步骤：</p>
-<p>​                1. 获取字节输出流</p>
-<p>​                2. 输出数据</p>
-<p>​        4. 验证码</p>
-<p>​            1. 本质：图片</p>
-<p>​            2. 目的：防止恶意表单注册</p>
-<p>​      <img src="file:///C:%5CUsers%5Chp%5CAppData%5CLocal%5CTemp%5Cksohtml14372%5Cwps15.jpg" alt="img"></p>
-<p><strong><em>\</em>2.3、掌握ServletContext的常用API**</strong></p>
-<p><strong><em>\</em>Servlet有四大域对象，pageContext request session application**</strong></p>
-<p><strong><em>\</em>request    HttpServletRequest**</strong></p>
-<p><strong><em>\</em>session    HttpSession**</strong></p>
-<p><strong><em>\</em>application   ServletContext**</strong></p>
-<p>\1. 概念：代表整个web应用，可以和程序的容器(服务器)来通信</p>
-<p>​    2. 获取：</p>
-<p>​        1. 通过request对象获取</p>
-<p>​            request.getServletContext();</p>
-<p>​        2. 通过HttpServlet获取</p>
-<p>​            this.getServletContext();</p>
-<p>​    3. 功能：</p>
-<p>​        1. 获取MIME类型：</p>
-<p>​            * MIME类型:在互联网通信过程中定义的一种文件数据类型</p>
-<p>​                * 格式： 大类型/小类型  text/html        image/jpeg</p>
-<p>​            * 获取：String getMimeType(String file)  </p>
-<p>​        2. 域对象：共享数据</p>
-<p>​            1. setAttribute(String name,Object value)</p>
-<p>​            2. getAttribute(String name)</p>
-<p>​            3. removeAttribute(String name)</p>
-<p>​            * ServletContext对象范围：所有用户所有请求的数据</p>
-<p>​        3. 获取文件的真实(服务器)路径</p>
-<p>​            1. 方法：String getRealPath(String path)  </p>
-<p>​             String b = context.getRealPath(“/b.txt”);//web目录下资源访问</p>
-<p>​           System.out.println(b);</p>
-<p>​           String c = context.getRealPath(“/WEB-INF/c.txt”);//WEB-INF目录下的资源访问</p>
-<p>​           System.out.println(c);</p>
-<p>​          String a = context.getRealPath(“/WEB-INF/classes/a.txt”);//src目录下的资源访问</p>
-<p>​           System.out.println(a);</p>
-<p><strong><em>\</em>2.4、完成文件下载案例**</strong></p>
-<p>​     文件下载需求：</p>
-<p>​        1. 页面显示超链接</p>
-<p>​        2. 点击超链接后弹出下载提示框</p>
-<p>​        3. 完成图片文件下载</p>
-<p>​     分析：</p>
-<p>​        1. 超链接指向的资源如果能够被浏览器解析，则在浏览器中展示，如果不能解析，则弹出下载提示框。不满足需求</p>
-<p>​        2. 任何资源都必须弹出下载提示框</p>
-<p>​        3. 使用响应头设置资源的打开方式：</p>
-<p>​         content-disposition:attachment;filename=xxx</p>
-<p>​     步骤：</p>
-<p>​        1. 定义页面，编辑超链接href属性，指向Servlet，传递资源名称filename</p>
-<p>​        2. 定义Servlet</p>
-<p>​            1. 获取文件名称</p>
-<p>​            2. 使用字节输入流加载文件进内存</p>
-<p>​            3. 指定response的响应头： content-disposition:attachment;filename=xxx</p>
-<p>​            4. 将数据写出到response输出流</p>
-<p>​     问题：</p>
-<p>​         中文文件问题</p>
-<p>​             解决思路：</p>
-<p>​                1. 获取客户端使用的浏览器版本信息</p>
-<p>​                2. 根据不同的版本信息，设置filename的编码方式不同</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Mysql</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/12/02/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E8%AE%B2%E4%B9%89/">展开全文 >></a>
         </p>
       
 
